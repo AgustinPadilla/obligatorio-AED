@@ -33,11 +33,11 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno eliminarAerolinea(String nombre) {
-        Aerolinea aux = new Aerolinea(nombre, "", 1);
+        Aerolinea aux = new Aerolinea(nombre);
         
         if (!ListaAerolineas.Contiene(aux)) return Retorno.error1();
         
-        if (ListaAerolineas.ObtenerPorValor(aux).getDato().getAviones().Vacia()) return Retorno.error2();
+        if (!ListaAerolineas.ObtenerPorValor(aux).getDato().getAviones().Vacia()) return Retorno.error2();
         
         ListaAerolineas.EliminarPorValor(aux);
         
@@ -46,7 +46,22 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno registrarAvion(String codigo, int capacidadMax, String nomAerolinea) {
-        return Retorno.noImplementada();
+        
+        if(capacidadMax >= 9 || capacidadMax%3 != 0) return Retorno.error2();
+        
+        Aerolinea x = new Aerolinea(nomAerolinea);
+        NodoS<Aerolinea> nodo = ListaAerolineas.ObtenerPorValor(x);
+        
+        if(nodo == null) return Retorno.error3();
+        
+        Avion nuevoAvion = new Avion(codigo, capacidadMax);
+        
+        try{
+        nodo.getDato().agregarAvion(nuevoAvion);
+        } catch(Exception e){
+            return Retorno.error1();
+        }
+        return Retorno.ok();
     }
 
     @Override
