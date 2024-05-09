@@ -1,5 +1,7 @@
 package tads;
 
+import Excepciones.NoExisteException;
+
 public class ListaS<T> implements ILista<T> {
 
     protected NodoS<T> cabeza;
@@ -23,7 +25,7 @@ public class ListaS<T> implements ILista<T> {
     // METODOS
     @Override
     public void Adicionar(T x) {
-        NodoS<T> elem = new NodoS<T>(x);
+        NodoS<T> elem = new NodoS(x);
         if (Vacia()) {
             cabeza = elem;
         } else {
@@ -37,7 +39,7 @@ public class ListaS<T> implements ILista<T> {
     }
 
     @Override
-    public void Insertar(T x, int pos){
+    public void Insertar(T x, int pos) {
         int contador = 0;
         NodoS<T> aux = cabeza;
         while (contador < pos) {
@@ -82,36 +84,50 @@ public class ListaS<T> implements ILista<T> {
         return cabeza == null;
     }
 
-    public boolean Contiene(T valor){
-        NodoS<T> aux = cabeza;
-        while (aux.getSiguiente() != null){
-            if(aux.getDato().equals(valor)){
-                return true;
-            }else{
-                aux = aux.getSiguiente();
-            }
+    public boolean Contiene(T valor) {
+        if (Vacia()) {
+            return false;
         }
-        return false;
-    }
-    
-    public void EliminarPorValor(T x) {
         NodoS<T> aux = cabeza;
-        while (aux.getSiguiente() != null) {
-            NodoS<T> auxSig = aux.getSiguiente();
-            if (auxSig.getDato() == x) {
-                aux.setSiguiente(auxSig.getSiguiente());
-                longitud--;
-                return;
+        do {
+            if (valor.equals(aux.getDato())) {
+                return true;
             } else {
                 aux = aux.getSiguiente();
             }
-        }
+        } while (aux != null);
+
+        return false;
     }
-    
+
+    public void EliminarPorValor(T x) throws NoExisteException {
+        if (Vacia()) {
+            return;
+        }
+        if (cabeza.getDato().equals(x)) {
+            cabeza = null;
+            return;
+        }
+        NodoS<T> aux = cabeza;
+        do {
+            if (aux.getSiguiente() != null) {
+                NodoS<T> auxSig = aux.getSiguiente();
+                if (auxSig.getDato().equals(x)) {
+                    aux.setSiguiente(auxSig.getSiguiente());
+                    longitud--;
+                    return;
+                } else {
+                    aux = aux.getSiguiente();
+                }
+            }
+        } while (aux.getSiguiente() != null);
+        throw new NoExisteException();
+    }
+
     public NodoS<T> ObtenerPorValor(T x) {
         NodoS<T> aux = cabeza;
         while (aux.getSiguiente() != null) {
-            if (aux.getDato() == x) {
+            if (aux.getDato().equals(x)) {
                 return aux;
             } else {
                 aux = aux.getSiguiente();
@@ -119,5 +135,5 @@ public class ListaS<T> implements ILista<T> {
         }
         return null;
     }
-    
+
 }

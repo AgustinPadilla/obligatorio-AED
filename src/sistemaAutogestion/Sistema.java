@@ -1,5 +1,6 @@
 package sistemaAutogestion;
 
+import Excepciones.NoExisteException;
 import dominio.*;
 import tads.ListaS;
 import tads.NodoS;
@@ -12,9 +13,9 @@ public class Sistema implements IObligatorio {
     
     @Override
     public Retorno crearSistemaDeGestion() {
-        ListaAerolineas = new ListaS<Aerolinea>();
-        ListaVuelos = new ListaS<Vuelo>();
-        ListaClientes = new ListaS<Cliente>();
+        ListaAerolineas = new ListaS<>();
+        ListaVuelos = new ListaS<>();
+        ListaClientes = new ListaS<>();
         
         return Retorno.ok();
     }
@@ -23,7 +24,7 @@ public class Sistema implements IObligatorio {
     public Retorno crearAerolinea(String nombre, String pais, int cantMaxAviones) {
       Aerolinea nuevo = new Aerolinea(nombre, pais, cantMaxAviones);
       
-      if(cantMaxAviones == 0) return Retorno.error2();
+      if(cantMaxAviones <= 0) return Retorno.error2();
       
       if(ListaAerolineas.Contiene(nuevo)) return Retorno.error1();
       
@@ -35,19 +36,21 @@ public class Sistema implements IObligatorio {
     public Retorno eliminarAerolinea(String nombre) {
         Aerolinea aux = new Aerolinea(nombre);
         
-        if (!ListaAerolineas.Contiene(aux)) return Retorno.error1();
+        NodoS<Aerolinea> nodoAerolinea = ListaAerolineas.ObtenerPorValor(aux);
         
-        if (!ListaAerolineas.ObtenerPorValor(aux).getDato().getAviones().Vacia()) return Retorno.error2();
+        if (nodoAerolinea == null) return Retorno.error1();
         
+        if (!nodoAerolinea.getDato().getAviones().Vacia()) return Retorno.error2();
+
         ListaAerolineas.EliminarPorValor(aux);
-        
+
         return Retorno.ok();
     }
 
     @Override
     public Retorno registrarAvion(String codigo, int capacidadMax, String nomAerolinea) {
         
-        if(capacidadMax >= 9 || capacidadMax%3 != 0) return Retorno.error2();
+        if(capacidadMax < 9 || capacidadMax%3 != 0) return Retorno.error2();
         
         Aerolinea x = new Aerolinea(nomAerolinea);
         NodoS<Aerolinea> nodo = ListaAerolineas.ObtenerPorValor(x);
@@ -66,6 +69,16 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno eliminarAvion(String nomAerolinea, String codAvion) {
+        Aerolinea aux = new Aerolinea(nomAerolinea);
+        NodoS<Aerolinea> nodoAerolinea = ListaAerolineas.ObtenerPorValor(aux);
+        if (nodoAerolinea == null) return Retorno.error1();
+        
+        Avion avion = new Avion(codAvion, 0);
+        try{
+        nodoAerolinea.getDato().eliminarAvion(avion);
+        } catch (NoExisteException e){
+            return Retorno.error2();
+        }
         return Retorno.noImplementada();
     }
 

@@ -32,4 +32,11 @@ public class Avion {
     public int getCapacidadMaxima(){
         return capacidadMaxima;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Avion)) return false;
+        Avion otro = (Avion) obj;
+        return this.codigo.equals(otro.codigo);
+    }
 }

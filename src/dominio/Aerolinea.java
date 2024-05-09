@@ -20,6 +20,10 @@ public class Aerolinea {
         this.Aviones = new ListaS<Avion>();
     }
     
+    public Aerolinea(String nombre){
+        this.nombre = nombre;
+    }
+    
     public void setNombre(String nom){
         nombre = nom;
     }
@@ -43,20 +47,25 @@ public class Aerolinea {
     public int getCantMaxAviones(){
         return cantMaxAviones;
     }
-
-    public boolean equals(Aerolinea obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        return Objects.equals(this.nombre, obj.nombre);
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Aerolinea)) return false;
+        Aerolinea otro = (Aerolinea) obj;
+        return this.nombre.equals(otro.nombre);
     }
 
     public ListaS<Avion> getAviones() {
         return Aviones;
     }  
     
+    public void agregarAvion(Avion avion) throws Exception {
+        if(Aviones.Contiene(avion)) throw new Exception("Avion ya existe");
+        
+        Aviones.Adicionar(avion);
+    }
     
+    public void eliminarAvion(Avion avion) {
+        
+        Aviones.EliminarPorValor(avion);
+    }
 }
