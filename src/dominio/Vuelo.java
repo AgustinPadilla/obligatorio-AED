@@ -5,6 +5,7 @@
 package dominio;
 
 import tads.ListaS;
+import tads.ColaS;
 
 /**
  *
@@ -22,8 +23,8 @@ public class Vuelo {
     private int cantPasajesPClase;
     private int vendidosEcon;
     private int vendidosPClase;
-    private ListaS<Cliente> listaEsperaEcon;
-    private ListaS<Cliente> listaEsperaPClase;
+    private ColaS<Cliente> listaEsperaEcon;
+    private ColaS<Cliente> listaEsperaPClase;
 
     public Vuelo(String codigoVuelo, String aerolinea, String codAvion, String paisDestino, int dia, int mes, int anio, int cantPasajesEcon, int cantPasajesPClase, int vendidosEcon, int vendidosPClase, ListaS<Cliente> listaEsperaEcon, ListaS<Cliente> listaEsperaPClase) {
         this.codigoVuelo = codigoVuelo;
@@ -37,8 +38,8 @@ public class Vuelo {
         this.cantPasajesPClase = cantPasajesPClase;
         this.vendidosEcon = vendidosEcon;
         this.vendidosPClase = vendidosPClase;
-        this.listaEsperaEcon = new ListaS<Cliente>();
-        this.listaEsperaPClase = new ListaS<Cliente>();
+        this.listaEsperaEcon = new ColaS<Cliente>();
+        this.listaEsperaPClase = new ColaS<Cliente>();
     }
 
     public String getCodigoVuelo() {
