@@ -211,7 +211,7 @@ public class IObligatorioTest {
 
     @Test
     public void testListarAerolineas() {
-        Retorno r = miSistema.crearAerolinea("Aerolineas Argentinas", "Argentina", 10);
+        Retorno r = miSistema.crearAerolinea("Aerolíneas Argentinas", "Argentina", 10);
         assertEquals(Retorno.ok().resultado, r.resultado);
         r = miSistema.crearAerolinea("Iberia", "España", 20);
         assertEquals(Retorno.ok().resultado, r.resultado);
@@ -240,7 +240,7 @@ public class IObligatorioTest {
         assertEquals(Retorno.ok().resultado, r.resultado);
         
         r = miSistema.listarAvionesDeAerolinea("Aerolineas Argentinas");
-        assertEquals("AA311-21|\nAA345-12|" , r.valorString);
+        assertEquals("AA345-12|\nAA311-21|" , r.valorString);
             
     }
 

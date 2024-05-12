@@ -8,39 +8,47 @@ import tads.NodoS;
 public class Sistema implements IObligatorio {
 
     private ListaS<Aerolinea> ListaAerolineas;
-    private ListaS<Vuelo> ListaVuelos;
     private ListaS<Cliente> ListaClientes;
-    
+
     @Override
     public Retorno crearSistemaDeGestion() {
         ListaAerolineas = new ListaS<>();
-        ListaVuelos = new ListaS<>();
         ListaClientes = new ListaS<>();
-        
+
         return Retorno.ok();
     }
 
     @Override
     public Retorno crearAerolinea(String nombre, String pais, int cantMaxAviones) {
-      Aerolinea nuevo = new Aerolinea(nombre, pais, cantMaxAviones);
-      
-      if(cantMaxAviones <= 0) return Retorno.error2();
-      
-      if(ListaAerolineas.Contiene(nuevo)) return Retorno.error1();
-      
-      ListaAerolineas.Adicionar(nuevo);
-      return Retorno.ok();
+        Aerolinea nuevo = new Aerolinea(nombre, pais, cantMaxAviones);
+
+        if (cantMaxAviones <= 0) {
+            return Retorno.error2();
+        }
+
+        if (ListaAerolineas.Contiene(nuevo)) {
+            return Retorno.error1();
+        }
+
+        ListaAerolineas.Adicionar(nuevo);
+        return Retorno.ok();
     }
 
     @Override
     public Retorno eliminarAerolinea(String nombre) {
         Aerolinea aux = new Aerolinea(nombre);
-        
-        NodoS<Aerolinea> nodoAerolinea = ListaAerolineas.ObtenerPorValor(aux);
-        
-        if (nodoAerolinea == null) return Retorno.error1();
-        
-        if (!nodoAerolinea.getDato().getAviones().Vacia()) return Retorno.error2();
+        int pos;
+        Aerolinea Aerolinea;
+        try {
+            pos = ListaAerolineas.ObtenerPorValor(aux);
+            Aerolinea = ListaAerolineas.Obtener(pos);
+        } catch (NoExisteException ex) {
+            return Retorno.error1();
+        }
+
+        if (!Aerolinea.getAviones().Vacia()) {
+            return Retorno.error2();
+        }
 
         ListaAerolineas.EliminarPorValor(aux);
 
@@ -49,19 +57,26 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno registrarAvion(String codigo, int capacidadMax, String nomAerolinea) {
-        
-        if(capacidadMax < 9 || capacidadMax%3 != 0) return Retorno.error2();
-        
+
+        if (capacidadMax < 9 || capacidadMax % 3 != 0) {
+            return Retorno.error2();
+        }
+
         Aerolinea x = new Aerolinea(nomAerolinea);
-        NodoS<Aerolinea> nodo = ListaAerolineas.ObtenerPorValor(x);
-        
-        if(nodo == null) return Retorno.error3();
-        
+        int pos;
+        Aerolinea Aerolinea;
+        try {
+            pos = ListaAerolineas.ObtenerPorValor(x);
+            Aerolinea = ListaAerolineas.Obtener(pos);
+        } catch (NoExisteException ex) {
+            return Retorno.error3();
+        }
+
         Avion nuevoAvion = new Avion(codigo, capacidadMax);
-        
-        try{
-        nodo.getDato().agregarAvion(nuevoAvion);
-        } catch(Exception e){
+
+        try {
+            Aerolinea.agregarAvion(nuevoAvion);
+        } catch (Exception e) {
             return Retorno.error1();
         }
         return Retorno.ok();
@@ -69,17 +84,30 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno eliminarAvion(String nomAerolinea, String codAvion) {
+
         Aerolinea aux = new Aerolinea(nomAerolinea);
-        NodoS<Aerolinea> nodoAerolinea = ListaAerolineas.ObtenerPorValor(aux);
-        if (nodoAerolinea == null) return Retorno.error1();
-        
-        Avion avion = new Avion(codAvion, 0);
-        try{
-        nodoAerolinea.getDato().eliminarAvion(avion);
-        } catch (NoExisteException e){
+        int pos;
+        Aerolinea Aerolinea;
+        try {
+            pos = ListaAerolineas.ObtenerPorValor(aux);
+            Aerolinea = ListaAerolineas.Obtener(pos);
+        } catch (NoExisteException ex) {
+            return Retorno.error1();
+        }
+
+        try {
+            Avion x = new Avion(codAvion, 0);
+            int posAvion = Aerolinea.getAviones().ObtenerPorValor(x);
+            Avion avion = Aerolinea.getAviones().Obtener(posAvion);
+            if (avion.vuelosConPasajesVendidos()) {
+                return Retorno.error3();
+            }
+
+            Aerolinea.eliminarAvion(posAvion);
+        } catch (NoExisteException e) {
             return Retorno.error2();
         }
-        return Retorno.noImplementada();
+        return Retorno.ok();
     }
 
     @Override
@@ -104,12 +132,22 @@ public class Sistema implements IObligatorio {
 
     @Override
     public Retorno listarAerolineas() {
-        return Retorno.noImplementada();
+        return Retorno.ok(ListaAerolineas.ListarAlfabeticamente());
     }
 
     @Override
     public Retorno listarAvionesDeAerolinea(String nombre) {
-        return Retorno.noImplementada();
+        Aerolinea x = new Aerolinea(nombre);
+        int pos;
+        Aerolinea Aerolinea;
+        try {
+            pos = ListaAerolineas.ObtenerPorValor(x);
+            Aerolinea = ListaAerolineas.Obtener(pos);
+        } catch (NoExisteException ex) {
+            return Retorno.error1();
+        }
+        
+        return Retorno.ok(Aerolinea.getAviones().Listar());
     }
 
     @Override

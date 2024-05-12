@@ -64,8 +64,13 @@ public class Aerolinea {
         Aviones.Adicionar(avion);
     }
     
-    public void eliminarAvion(Avion avion) {
+    public void eliminarAvion(int pos) {
         
-        Aviones.EliminarPorValor(avion);
+        Aviones.Eliminar(pos);
+    }
+    
+    @Override 
+    public String toString(){
+        return nombre + "-" + pais + "-" + cantMaxAviones + "|" ;
     }
 }

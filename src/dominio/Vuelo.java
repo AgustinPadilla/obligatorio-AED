@@ -129,6 +129,8 @@ public class Vuelo {
         this.vendidosPClase = vendidosPClase;
     }
     
-    
+    public boolean tienePasajesVendidos(){
+        return vendidosEcon > 0 || vendidosPClase > 0;
+    }
     
 }
