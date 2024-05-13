@@ -154,6 +154,23 @@ public class IObligatorioTest {
         assertEquals(Retorno.error3().resultado, r.resultado);
 
     }
+    
+    @Test
+    public void testRegistrarAvionERROR4() {
+        Retorno r = miSistema.crearAerolinea("Aerolineas Argentinas", "Argentina", 1);
+        assertEquals(Retorno.ok().resultado, r.resultado);
+        r = miSistema.crearAerolinea("Iberia", "España", 20);
+        assertEquals(Retorno.ok().resultado, r.resultado);
+        r = miSistema.crearAerolinea("Delta Air Lines", "Estados Unidos", 30);
+        assertEquals(Retorno.ok().resultado, r.resultado);
+
+        r = miSistema.registrarAvion("AA346", 12, "Aerolineas Argentinas");
+        assertEquals(Retorno.ok().resultado, r.resultado);
+        
+        r = miSistema.registrarAvion("AA345", 12, "Aerolineas Argentinas");
+        assertEquals(Retorno.error4().resultado, r.resultado);
+
+    }
 
     @Test
     public void testEliminarAvionOK() {
