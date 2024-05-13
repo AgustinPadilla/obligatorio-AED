@@ -4,8 +4,8 @@
  */
 package dominio;
 
-import tads.ListaS;
 import tads.ColaS;
+import tads.ListaS;
 
 /**
  *

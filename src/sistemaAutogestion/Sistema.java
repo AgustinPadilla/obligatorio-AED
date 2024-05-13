@@ -71,6 +71,8 @@ public class Sistema implements IObligatorio {
         } catch (NoExisteException ex) {
             return Retorno.error3();
         }
+        
+        if (Aerolinea.getAviones().Longitud() == Aerolinea.getCantMaxAviones()) return Retorno.error4();
 
         Avion nuevoAvion = new Avion(codigo, capacidadMax);
 
